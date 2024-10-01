@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="16x16" href="https://img.pikbest.com/png-images/book-logo-vector-graphic-element_2451410.png!sw800"/>
+    <title>Library System For Management</title>
+    <link rel="stylesheet" href="style (1).css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="content">
+        <h2 id="choose">Select action to manage your books</h2>
+        
+
+        <div id="allBooksSection">
+          <h2>Search Book</h2>
+          <input type="text" id="searchInput" placeholder="Enter Title Book" />
+          <button id="searchBtn">Search</button>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Published Year</th>
+                <th>Available</th>
+              </tr>
+            </thead>
+            <tbody id="filterBook"></tbody>
+          </table>
+        </div>
+
+        <div id="addBookSection">
+          <h2>Add Book</h2>
+          <input type="text" id="addBookTitle" placeholder="Title" />
+          <input type="text" id="addBookAuthor" placeholder="Author" />
+          <select id="addBookGenre">
+            <option value="History">History</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Science">Science</option>
+            <option value="Non-Fiction">Non-Fiction</option>
+          </select>
+          <input
+            type="number"
+            id="addPublishedYear"
+            placeholder="Published Year"
+          />
+          <input type="checkbox" id="addAvailable" /> Available
+          <button id="addBookBtn">Add Book</button>
+        </div>
+
+        <div id="updateBookSection">
+          <h2>Update Book</h2>
+          <input type="text" id="updateBookId" placeholder="ID" />
+          <input type="text" id="updateBookTitle" placeholder="Title" />
+          <input type="text" id="updateBookAuthor" placeholder="Author" />
+          <select id="updateBookGenre">
+            <option value="History">History</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Science">Science</option>
+            <option value="Non-Fiction">Non-Fiction</option>
+          </select>
+          <input
+            type="number"
+            id="updatePublishedYear"
+            placeholder="Published Year"
+          />
+          <input type="checkbox" id="updateAvailable" /> Available
+          <button id="updateBookBtn">Update Book</button>
+        </div>
+
+        <div id="deleteBookSection">
+          <h2>Delete Book</h2>
+          <input type="text" id="deleteBookTitle" placeholder="Title" />
+          <button id="deleteBookBtn">Delete Book</button>
+        </div>
+      </div>
+    </div>
+
+    <nav class="navbar">
+      <h1>Library System For Management</h1>
+      <ul>
+        <li><a href="#" id="viewBooks">All Books</a></li>
+        <li><a href="#" id="addBookNav">Add Book</a></li>
+        <li><a href="#" id="updateBookNav">Update Book</a></li>
+        <li><a href="#" id="deleteBookNav">Delete Book</a></li>
+        <li><a href="#" id="exportBtn">Export File</a></li>
+      </ul>
+    </nav>
+      
+
+    <script src="src/library.js"></script>
+
+    <script>
+      const choose = document.getElementById("choose");
+      const allbookList = document.getElementById("allBooksSection");
+      const addBookSection = document.getElementById("addBookSection");
+      const updateBookSection = document.getElementById("updateBookSection");
+      const deleteBookSection = document.getElementById("deleteBookSection");
+
+      const viewBooks = document.getElementById("viewBooks");
+      const addBookNav = document.getElementById("addBookNav");
+      const updateBookNav = document.getElementById("updateBookNav");
+      const deleteBookNav = document.getElementById("deleteBookNav");
+
+      choose.style.display = "block";
+      allbookList.style.display = "none";
+      addBookSection.style.display = "none";
+      updateBookSection.style.display = "none";
+      deleteBookSection.style.display = "none";
+
+      const library = new Library();
+
+      viewBooks.addEventListener("click", () => {
+        choose.style.display = "none";
+        allbookList.style.display = "block";
+        addBookSection.style.display = "none";
+        updateBookSection.style.display = "none";
+        deleteBookSection.style.display = "none";
+      });
+
+      addBookNav.addEventListener("click", () => {
+        choose.style.display = "none";
+        allbookList.style.display = "none";
+        addBookSection.style.display = "block";
+        updateBookSection.style.display = "none";
+        deleteBookSection.style.display = "none";
+      });
+
+      updateBookNav.addEventListener("click", () => {
+        choose.style.display = "none";
+        allbookList.style.display = "none";
+        addBookSection.style.display = "none";
+        updateBookSection.style.display = "block";
+        deleteBookSection.style.display = "none";
+      });
+
+      deleteBookNav.addEventListener("click", () => {
+        choose.style.display = "none";
+        allbookList.style.display = "none";
+        addBookSection.style.display = "none";
+        updateBookSection.style.display = "none";
+        deleteBookSection.style.display = "block";
+      });
+
+      // Display all books
+      document.getElementById("viewBooks").addEventListener("click", () => {
+        const allBooks = library.list_add_book();
+        const filterBookTableBody = document.getElementById("filterBook");
+        filterBookTableBody.innerHTML = "";
+
+        allBooks.forEach((book) => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+      <td>${book.id}</td>
+      <td>${book.title}</td>
+      <td>${book.author}</td>
+      <td>${book.genre}</td>
+      <td>${book.publishedYear}</td>
+      <td>${book.available ? "Yes" : "No"}</td>
+    `;
+
+          filterBookTableBody.appendChild(row);
+        });
+      });
+
+      // Search book
+      document.getElementById("searchBtn").addEventListener("click", () => {
+        const searchTerm = document.getElementById("searchInput").value;
+        const filteredBooks = library.search_books(searchTerm);
+        const filterBookTableBody = document.getElementById("filterBook");
+        filterBookTableBody.innerHTML = "";
+
+        filteredBooks.forEach((book) => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+      <td>${book.id}</td>
+      <td>${book.title}</td>
+      <td>${book.author}</td>
+      <td>${book.genre}</td>
+      <td>${book.publishedYear}</td>
+      <td>${book.available ? "Yes" : "No"}</td>
+    `;
+
+          filterBookTableBody.appendChild(row);
+        });
+      });
+
+      // Add book
+      document.getElementById("addBookBtn").addEventListener("click", () => {
+        const title = document.getElementById("addBookTitle").value;
+        const author = document.getElementById("addBookAuthor").value;
+        const genre = document.getElementById("addBookGenre").value;
+        const publishedYear = parseInt(
+          document.getElementById("addPublishedYear").value,
+          10
+        );
+        const available = document.getElementById("addAvailable").checked;
+
+        if (title && author && genre && publishedYear) {
+          library.add_book({ title, author, genre, publishedYear, available });
+          alert("Added successfully!");
+        } else {
+          alert("Please fill in all fields.");
+        }
+      });
+
+      // Update book
+      document.getElementById("updateBookBtn").addEventListener("click", () => {
+        const id = parseInt(document.getElementById("updateBookId").value, 10);
+        const title = document.getElementById("updateBookTitle").value;
+        const author = document.getElementById("updateBookAuthor").value;
+        const genre = document.getElementById("updateBookGenre").value;
+        const publishedYear = parseInt(
+          document.getElementById("updatePublishedYear").value,
+          10
+        );
+        const available = document.getElementById("updateAvailable").checked;
+
+        if (title && author && genre && publishedYear) {
+          library.update_book(id, {
+            title,
+            author,
+            genre,
+            publishedYear,
+            available,
+          });
+          alert("Updated!");
+        } else {
+          alert("Fill add data.");
+        }
+      });
+
+      // Delete book
+      document.getElementById("deleteBookBtn").addEventListener("click", () => {
+        const title = document.getElementById("deleteBookTitle").value;
+        if (title) {
+          library.delete_book(title);
+          alert("Book deleted successfully!");
+        } else {
+          alert("Please provide a valid Book Title.");
+        }
+      });
+
+      document.getElementById("exportBtn").addEventListener("click", () => {
+        const jsonData = JSON.stringify(library.list_add_book());
+        const blob = new Blob([jsonData], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Detials All Book.json";
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
+</html>
